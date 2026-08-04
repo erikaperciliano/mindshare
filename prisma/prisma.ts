@@ -1,7 +1,10 @@
 import { PrismaClient } from '@prisma/client'
 
-const globalFormPrisma = global as unknown as { prisma: PrismaClient }
+const globalForPrisma = global as unknown as {
+  prisma: PrismaClient
+}
 
-export const prismaClient = globalFormPrisma.prisma || new PrismaClient()
+export const prismaClient =
+  globalForPrisma.prisma || new PrismaClient()
 
-globalFormPrisma.prisma = prismaClient
+globalForPrisma.prisma = prismaClient

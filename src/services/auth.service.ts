@@ -29,7 +29,7 @@ export class AuthService {
 
     generateTokens(user: User) {
         const token = singJwt({ id: user.id, email: user.email, }, '15m')
-        const refreshToken = singJwt({ id: user.id, email: user.email, }, 'id')
+        const refreshToken = singJwt({ id: user.id, email: user.email, }, '1d')
 
         return { token, refreshToken, user }
     }
