@@ -1,7 +1,7 @@
 import { prismaClient } from "../../prisma/prisma";
 import  { User } from '@prisma/client'
-import { RegisterInput } from "../dtos/input/auth.input";
-import { hashPassword } from "../utils/hash";
+import { LoginInput, RegisterInput } from "../dtos/input/auth.input";
+import { comparePassword, hashPassword } from "../utils/hash";
 import { singJwt } from "../utils/jwt";
 
 export class AuthService {
@@ -25,6 +25,19 @@ export class AuthService {
         })
         
         return this.generateTokens(user)
+    }
+
+    async login(data: LoginInput) {
+        const existingUser = await prismaClient.user.findUnique({
+            where: {
+                email: data.email
+            },
+        })
+
+        if (!existingUser) throw new Error('Usuário não cadastrado!')
+        const compare = await comparePassword(data.password, existingUser.password)
+        if (!compare) throw new Error('Senha inválida!')
+        return this.generateTokens(existingUser)
     }
 
     generateTokens(user: User) {
