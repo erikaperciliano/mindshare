@@ -3,7 +3,7 @@ import { GraphqlContext } from "../context"
 import { User } from "@prisma/client"
 import { prismaClient } from "../../../prisma/prisma"
 
-export const GqUser = () => {
+export const GqlUser = () => {
     return createParameterDecorator(
         async ({ context }: ResolverData<GraphqlContext>): Promise<User | null> => {
             if (!context || !context.user) return null
