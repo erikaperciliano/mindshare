@@ -1,8 +1,8 @@
 import { prismaClient } from "../../prisma/prisma";
-import { CreateCommentType } from "../dtos/input/comment.input";
+import { CreateCommentInput } from "../dtos/input/comment.input";
 
 export class CommentService {
-    async create(ideaId: string, authorId: string, data: CreateCommentType) {
+    async create(ideaId: string, authorId: string, data: CreateCommentInput) {
         const findIdea = await prismaClient.idea.findUnique({
             where: {
                 id: ideaId
@@ -16,6 +16,14 @@ export class CommentService {
                 ideaId,
                 authorId,
                 content: data.content
+            }
+        })
+    }
+
+    async listCommentByIdea(ideaId: string) {
+        return prismaClient.comment.findMany({
+            where: {
+                ideaId
             }
         })
     }

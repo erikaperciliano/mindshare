@@ -41,7 +41,7 @@ export class IdeaService {
     async listIdeas() {
         return prismaClient.idea.findMany()
     }
-
+    
     async deleteIdea(id: string) {
         const findIdea = await prismaClient.idea.findUnique({
             where: {
