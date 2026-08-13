@@ -1,13 +1,15 @@
 import { useState } from "react";
 import logo from '@/assets/logo.svg'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+
 import { useNavigate } from "react-router-dom"
 import { useAuthStore } from "@/stores/auth";
 import { toast } from "sonner";
 import type { FormEvent } from "react";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 
 export function SignUp() {
     const navigate = useNavigate()

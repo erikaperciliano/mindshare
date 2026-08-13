@@ -1,13 +1,14 @@
 import { useState } from "react";
 import logo from '@/assets/logo.svg'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+
 import { useNavigate } from "react-router-dom"
 import { useAuthStore } from "@/stores/auth";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 
 export function Login() {

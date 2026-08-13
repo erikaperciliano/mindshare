@@ -1,4 +1,4 @@
-import { apolloClient } from "@/lib/apollo";
+import { apolloClient } from "@/lib/graphql/apollo";
 import { LOGIN } from "@/lib/graphql/mutations/login";
 import { REGISTER } from "@/lib/graphql/mutations/register";
 import type { LoginInput, RegisterInput, User } from "@/types";
