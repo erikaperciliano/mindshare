@@ -5,16 +5,41 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom"
+import { useAuthStore } from "@/stores/auth";
+import { toast } from "sonner";
+import type { FormEvent } from "react";
 
 export function SignUp() {
+    const navigate = useNavigate()
+
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [loading, setLoading] = useState(false)
 
-    const navigate = useNavigate()
-    
-    const handleSubmit = (e: React.SubmitEvent) => {
+    const signup = useAuthStore((state) => state.signup)
 
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setLoading(true)
+
+        try {
+            const signupMutate= await signup({
+                name,
+                email,
+                password
+            })
+
+            if (signupMutate) {
+                console.log("Signup result:", signupMutate);
+                toast.success('Cadastro realizado com sucesso!')
+            }
+        } catch (error) {
+            console.error("Erro ao realizar o cadastro:", error);
+            toast.error("Erro ao realizar o cadastro");
+        } finally {
+            setLoading(false)
+        }   
     }
 
     return (
@@ -60,7 +85,7 @@ export function SignUp() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <Button type="submit" className="w-full">
+                        <Button type="submit" className="w-full" disabled={loading}>
                             Cadastrar
                         </Button>
                     </form>

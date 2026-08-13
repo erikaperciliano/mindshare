@@ -5,14 +5,40 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom"
+import { useAuthStore } from "@/stores/auth";
+import type { FormEvent } from "react";
+import { toast } from "sonner";
+
 
 export function Login() {
+    const navigate = useNavigate()
+
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const navigate = useNavigate()
-    
-    const handleSubmit = () => {
+    const [loading, setLoading] = useState(false)
 
+    const login = useAuthStore((state) => state.login)
+
+    
+    const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setLoading(true)
+
+        try {
+            const loginMutate = await login({
+                email,
+                password
+            })
+
+            if (loginMutate) {
+                toast.success('Login realizado com sucesso')
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error('Falha ao realizar o login')
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -48,7 +74,7 @@ export function Login() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <Button type="submit" className="w-full">
+                        <Button type="submit" className="w-full" disabled={loading}>
                             Entrar
                         </Button>
                     </form>
