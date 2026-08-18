@@ -13,12 +13,17 @@ export const buildContext = async ({ req, res }: ExpressContextFunctionArgument)
     let user: string | undefined
     let token: string | undefined
 
+
     if (authHeader?.startsWith('Bearer ')) {
         token = authHeader.substring('Bearer '.length)
         try {
             const payload = verifyJwt(token) as JwtPayload
             user = payload.id
+
+             console.log('JWT PAYLOAD:', payload)
+
         } catch (error) {
+            console.error('ERRO AO VALIDAR JWT:', error)
         }
     }
 
