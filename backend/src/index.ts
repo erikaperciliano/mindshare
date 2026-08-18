@@ -47,14 +47,12 @@ async function bootstrap() {
         })
     )
 
-    app.listen({
-        port: 4000
-    },
-        () => {
-        console.log(`Servidor iniciado na porta 4000!`)
-    })
-        
-}
+    const PORT = Number(process.env.PORT) || 4000
 
+    app.listen(PORT, "0.0.0.0", () => {
+        console.log(`Servidor iniciado na porta ${PORT}!`)
+    })
+}
+        
 bootstrap()
 
