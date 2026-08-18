@@ -10,6 +10,8 @@ import { useAuthStore } from "@/stores/auth"
 import { InviteMemberDialog } from "./components/InviteMemberDialog"
 import type { User } from "@/types"
 import { LIST_MEMBERS } from "@/lib/graphql/queries/members"
+import { EditMemberDialog } from "./components/EditMemberDialog"
+import { DeleteMemberDialog } from "./components/DeleteMemberDialog"
 
 export function Members() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -19,6 +21,7 @@ export function Members() {
   const [member, setMember] = useState<User | null>(null)
 
   const currentUserId = useAuthStore((state) => state.user?.id)
+
   const { data, loading, refetch } = useQuery<{ listUsers: User[] }>(
     LIST_MEMBERS
   )
@@ -59,7 +62,7 @@ export function Members() {
                   placeholder="Nome ou e-mail"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 max-w-[200px]"
+                  className="pl-9 max-w-50"
                 />
               </div>
             </div>
@@ -87,6 +90,23 @@ export function Members() {
         open={openInviteDialog}
         onOpenChange={setOpenInviteDialog}
         onCreated={() => refetch()}
+      />
+
+      <EditMemberDialog
+        key={member?.id}
+        open={openEditMemberDialog}
+        onOpenChange={setOpenEditMemberDialog}
+        onUpdated={(upatedUser) => {
+          setMember(upatedUser)
+          refetch()
+        }}
+        member={member}
+      />
+
+      <DeleteMemberDialog
+        open={openDeleteDialog}
+        onOpenChange={setOpenDeleteDialog}
+        member={member}
       />
     </Page>
   )

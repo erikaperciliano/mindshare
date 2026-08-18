@@ -2,11 +2,14 @@ import { Button } from "@/components/ui/button"
 import { Drawer, DrawerContent } from "@/components/ui/drawer"
 import { GET_IDEA } from "@/lib/graphql/queries/ideia"
 import type { Idea } from "@/types"
-import { useLazyQuery } from "@apollo/client/react"
+import { useLazyQuery, useMutation } from "@apollo/client/react"
 import { X } from "lucide-react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { CommentsList } from "./CommentList"
 import { CommentArea } from "./CommentTextArea"
+import { CREATE_COMMENT } from "@/lib/graphql/mutations/comment"
+import { TOGGLE_VOTE } from "@/lib/graphql/mutations/vote"
+import { toast } from "sonner"
 
 interface IdeaDetailDrawerProps {
     ideaId: string | null
@@ -15,20 +18,53 @@ interface IdeaDetailDrawerProps {
 }
 
 export function IdeaDetailDrawer({ open, onOpenChange, ideaId }: IdeaDetailDrawerProps) {
-    const [getIdeaaQuery, { data, loading }] = useLazyQuery <{ getIdea: Idea }>(GET_IDEA)
+    const [commentContent, setCommentContent] = useState("")
 
+    const [getIdeaQuery, { data, loading }] = useLazyQuery<{ getIdea: Idea }>(
+        GET_IDEA
+    )
 
-    useEffect(() => {
-        if(!idea) return
+    const [createCommentMutation] = useMutation(CREATE_COMMENT, {
+        refetchQueries: [{ query: GET_IDEA, variables: { ideaId } }],
+        onCompleted: () => {
+        setCommentContent("")
+        },
+    })
 
-        getIdeaaQuery({
-            variables: {
-                ideaId
-            }
+    const [toggleVoteMutation] = useMutation(TOGGLE_VOTE, {
+        refetchQueries: [{ query: GET_IDEA, variables: { ideaId } }],
+    })
+
+    const handleToggleVote = () => {
+        toggleVoteMutation({
+        variables: {
+            ideaId,
+        },
         })
-    }, [ideaId])
+    }
     
-    const idea = data?.getIdea
+    const handleAddComment = () => {
+    if (!commentContent) toast.error("Por favor insira um comentário")
+
+    createCommentMutation({
+      variables: {
+        ideaId,
+        data: {
+          content: commentContent,
+        },
+      },
+    })
+  }
+
+  useEffect(() => {
+    getIdeaQuery({
+      variables: {
+        ideaId,
+      },
+    })
+  }, [ideaId])
+
+  const { getIdea: idea } = data || {}
     
     return (
         <Drawer open={open} onOpenChange={onOpenChange} swipeDirection="right">
@@ -58,10 +94,10 @@ export function IdeaDetailDrawer({ open, onOpenChange, ideaId }: IdeaDetailDrawe
                     <CommentsList comments={idea?.comments || []} loading={loading} />
                 </div>
                 <CommentArea
-                    commentContent={""}
-                    setCommentContent={console.log}
-                    handleAddComment={console.log}
-                    handleVote={console.log}
+                    commentContent={commentContent || ""}
+                    setCommentContent={setCommentContent}
+                    handleAddComment={handleAddComment}
+                    handleVote={handleToggleVote}
                     idea={idea}
                 />
             </DrawerContent>

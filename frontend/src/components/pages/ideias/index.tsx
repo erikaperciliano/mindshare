@@ -55,7 +55,7 @@ export function IdeasPage() {
                 onOpenChange={setOpenDrawer}
                 ideaId={selectedIdeaId}
             />
-            <CreateIdeaDialog open={openDialog} onOpenChange={setOpenDialog} />
+            <CreateIdeaDialog open={openDialog} onOpenChange={setOpenDialog} onCreated={() => refetch()} />
             </Page>
   )
 }

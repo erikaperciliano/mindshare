@@ -12,7 +12,7 @@ import { toast } from 'sonner'
 interface CreateIdeaDDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
-    onSuccess?: () => void
+    onCreated?: () => void
 }
 
 export function CreateIdeaDialog({ open, onOpenChange }: CreateIdeaDDialogProps) {
