@@ -6,6 +6,7 @@ import { useAuthStore } from './stores/auth'
 import { Login } from './components/pages/auth/Login'
 import { SignUp } from './components/pages/auth/Signup'
 import { IdeasPage } from './components/pages/ideias'
+import { Members } from './components/pages/members'
 
 function ProtectdRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore()
@@ -43,11 +44,19 @@ function App() {
             }
           />
 
-           <Route
+          <Route
             path='/'
             element={
               <ProtectdRoute>
                 <IdeasPage />
+              </ProtectdRoute>
+            }
+          />
+          <Route
+            path='/members'
+            element={
+              <ProtectdRoute>
+                <Members />
               </ProtectdRoute>
             }
           />
