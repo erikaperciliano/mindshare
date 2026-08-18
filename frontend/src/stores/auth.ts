@@ -28,6 +28,7 @@ interface AuthState {
   isAuthenticated: boolean;
   signup: (data: RegisterInput) => Promise<boolean>;
   login: (data: LoginInput) => Promise<boolean>;
+  logout: () => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -115,6 +116,15 @@ export const useAuthStore = create<AuthState>()(
             throw error
           }
       },
+
+      logout: async () => {
+        set ({
+          user: null,
+          token: null,
+          isAuthenticated: false
+        })
+        await apolloClient.clearStore()
+      }
     }),
     {
       name: "auth-storage",
